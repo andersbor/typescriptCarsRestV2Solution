@@ -2,15 +2,31 @@
 <html lang="en-US">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Coding Template</title>
+  <title>Car Shop</title>
   <link rel="stylesheet" type="text/css" href="bundle.css">
 </head>
 
 <body>
-  <h1>Webpack - TypeScript - Scss</h1>
-  <h2>TypeScript Hello World</h2>  
+  <h1>Car Shop</h1>
+
+  <h2>Get All</h2>
+  <button id="getAllButton">Get all cars</button>
+
   <div id="content"></div>
-    
+
+  <h2>Delete</h2>
+  <input id="deleteInput" placeholder="id" />
+  <button id="deleteButton">Delete</button>
+
+  <div id="contentDelete"></div>
+
+  <h2>Add</h2>
+  <input id="addModel" placeholder="model" />
+  <input id="addVendor" placeholder="vendor" />
+  <input id="addPrice" placeholder="price" type="number" />
+  <button id="addButton">Add</button>
+  <div id="contentAdd"></div>
+ 
   <script src="bundle.js"></script>
 </body>
 </html>
