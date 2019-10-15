@@ -15,7 +15,8 @@ let baseUri: string = "http://anbo-carsrest.azurewebsites.net/api/cars";
 let buttonElement: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getAllButton");
 buttonElement.addEventListener("click", showAllCars);
 
-let outputElement: HTMLDivElement = <HTMLDivElement>document.getElementById("content");
+let buttonGetById: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getByIdButton");
+buttonGetById.addEventListener("click", getById);
 
 let buttonDeleteElement: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
 buttonDeleteElement.addEventListener("click", deleteCar);
@@ -23,7 +24,12 @@ buttonDeleteElement.addEventListener("click", deleteCar);
 let addButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("addButton");
 addButton.addEventListener("click", addCar);
 
+function carToString(car: ICar): string {
+    return car.id + " " + car.model + " " + car.vendor;
+}
+
 function showAllCars(): void {
+    let outputElement: HTMLDivElement = <HTMLDivElement>document.getElementById("content");
     axios.get<ICar[]>(baseUri)
         .then(function (response: AxiosResponse<ICar[]>): void {
             // element.innerHTML = generateSuccessHTMLOutput(response);
@@ -31,7 +37,7 @@ function showAllCars(): void {
             // outputHtmlElement.innerHTML = JSON.stringify(response.data);
             let result: string = "<ul id='carlist'>";
             response.data.forEach((car: ICar) => {
-                result += "<li>" + car.id + " " + car.model + " " + car.vendor + "</li>";
+                result += "<li>" + carToString(car) + "</li>";
             });
             result += "</ul>";
             outputElement.innerHTML = result;
@@ -48,8 +54,26 @@ function showAllCars(): void {
         });
 }
 
+function getById(): void {
+    let inputElement: HTMLInputElement = <HTMLInputElement>document.getElementById("deleteInput");
+    let outputElement: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDeleteOrGetById");
+    let id: string = inputElement.value;
+    let uri: string = baseUri + "/" + id;
+    axios.get<ICar>(uri)
+        .then((response: AxiosResponse) => {
+            if (response.status == 200) {
+                outputElement.innerHTML = response.status + " " + carToString(response.data);
+            } else {
+                outputElement.innerHTML = "No such car, id: " + id;
+            }
+        })
+        .catch((error: AxiosError) => {
+            outputElement.innerHTML = error.code + " " + error.message
+        })
+}
+
 function deleteCar(): void {
-    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDelete");
+    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDeleteOrGetById");
     let inputElement: HTMLInputElement = <HTMLInputElement>document.getElementById("deleteInput");
     let id: string = inputElement.value;
     let uri: string = baseUri + "/" + id;
