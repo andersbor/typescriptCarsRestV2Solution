@@ -12,20 +12,44 @@ interface ICar {
 
 let baseUri: string = "http://anbo-carsrest.azurewebsites.net/api/cars";
 
-let buttonElement: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getAllButton");
-buttonElement.addEventListener("click", showAllCars);
+let getAllButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getAllButton");
+getAllButton.addEventListener("click", showAllCars);
 
-let buttonGetById: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getByIdButton");
-buttonGetById.addEventListener("click", getById);
+let getByIdButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getByIdButton");
+getByIdButton.addEventListener("click", getById);
 
-let buttonDeleteElement: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
-buttonDeleteElement.addEventListener("click", deleteCar);
+let deleteButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
+deleteButton.addEventListener("click", deleteCar);
+
+let getByVendorButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getByVendorButton");
+getByVendorButton.addEventListener("click", getByVendor);
+
+let getByModelButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getByModelButton");
+getByModelButton.addEventListener("click", getByModel);
+
+let getByPriceRangeButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getByPriceRangeButton");
+getByPriceRangeButton.addEventListener("click", getByPriceRange);
 
 let addButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("addButton");
 addButton.addEventListener("click", addCar);
 
+let updateButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("updateButton");
+updateButton.addEventListener("click", updateCar);
+
 function carToString(car: ICar): string {
-    return car.id + " " + car.model + " " + car.vendor;
+    return car.id + " " + car.model + " " + car.vendor + " " + car.price;
+}
+
+function carArrayToList(cars: ICar[]): string {
+    if (cars.length == 0) {
+        return "empty";
+    }
+    let result: string = "<ul>";
+    cars.forEach((car: ICar) => {
+        result += "<li>" + carToString(car) + "</li>";
+    });
+    result += "</ul>";
+    return result;
 }
 
 function showAllCars(): void {
@@ -35,12 +59,7 @@ function showAllCars(): void {
             // element.innerHTML = generateSuccessHTMLOutput(response);
             // outputHtmlElement.innerHTML = generateHtmlTable(response.data);
             // outputHtmlElement.innerHTML = JSON.stringify(response.data);
-            let result: string = "<ul id='carlist'>";
-            response.data.forEach((car: ICar) => {
-                result += "<li>" + carToString(car) + "</li>";
-            });
-            result += "</ul>";
-            outputElement.innerHTML = result;
+            outputElement.innerHTML = carArrayToList(response.data);
         })
         .catch(function (error: AxiosError): void { // error in GET or in generateSuccess?
             if (error.response) {
@@ -55,6 +74,7 @@ function showAllCars(): void {
 }
 
 function getById(): void {
+    console.log("getById");
     let inputElement: HTMLInputElement = <HTMLInputElement>document.getElementById("deleteInput");
     let outputElement: HTMLDivElement = <HTMLDivElement>document.getElementById("contentDeleteOrGetById");
     let id: string = inputElement.value;
@@ -69,6 +89,65 @@ function getById(): void {
         })
         .catch((error: AxiosError) => {
             outputElement.innerHTML = error.code + " " + error.message
+        })
+}
+
+function getByVendor(): void {
+    console.log("getByVendor")
+    let inputElement: HTMLInputElement = <HTMLInputElement>document.getElementById("vendorInput");
+    let outputElement: HTMLDivElement = <HTMLDivElement>document.getElementById("contentGetByFunctions");
+    let vendor: string = inputElement.value;
+    let uri: string = baseUri + "/vendor/" + vendor;
+    axios.get<ICar[]>(uri)
+        .then((response: AxiosResponse) => {
+            if (response.status == 200) {
+                outputElement.innerHTML = response.status + " " + carArrayToList(response.data);
+            } else {
+                outputElement.innerHTML = "No such car, vendor: " + vendor;
+            }
+        })
+        .catch((error: AxiosError) => {
+            outputElement.innerHTML = "Error " + error.code + " " + error.message
+        })
+}
+
+function getByModel(): void {
+    console.log("getByModel")
+    let inputElement: HTMLInputElement = <HTMLInputElement>document.getElementById("modelInput");
+    let outputElement: HTMLDivElement = <HTMLDivElement>document.getElementById("contentGetByFunctions");
+    let model: string = inputElement.value;
+    let uri: string = baseUri + "/model/" + model;
+    axios.get<ICar[]>(uri)
+        .then((response: AxiosResponse) => {
+            if (response.status == 200) {
+                outputElement.innerHTML = response.status + " " + carArrayToList(response.data);
+            } else {
+                outputElement.innerHTML = "No such car, model: " + model;
+            }
+        })
+        .catch((error: AxiosError) => {
+            outputElement.innerHTML = "Error " + error.code + " " + error.message
+        })
+}
+
+function getByPriceRange(): void {
+    let inputElement1: HTMLInputElement = <HTMLInputElement>document.getElementById("lowerPriceInput")
+    let inputElement2: HTMLInputElement = <HTMLInputElement>document.getElementById("higherPriceInput")
+    let outputElement: HTMLDivElement = <HTMLDivElement>document.getElementById("contentGetByFunctions");
+    let fromPrice: string = inputElement1.value;
+    let toPrice: string = inputElement2.value;
+    // TODO check fromPrice <= toPrice
+    let uri: string = baseUri + "/price/" + fromPrice + "/" + toPrice;
+    axios.get<ICar[]>(uri)
+        .then((response: AxiosResponse) => {
+            if (response.status == 200) {
+                outputElement.innerHTML = response.status + " " + carArrayToList(response.data);
+            } else {
+                outputElement.innerHTML = "No such car";
+            }
+        })
+        .catch((error: AxiosError) => {
+            outputElement.innerHTML = "Error " + error.code + " " + error.message
         })
 }
 
@@ -89,9 +168,9 @@ function deleteCar(): void {
                 // the request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 // https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
-                output.innerHTML = error.message;
+                output.innerHTML = "Error " + error.code + " " + error.message
             } else { // something went wrong in the .then block?
-                output.innerHTML = error.message;
+                output.innerHTML = "Error " + error.code + " " + error.message
             }
         });
 }
@@ -112,7 +191,34 @@ function addCar(): void {
             console.log(message);
         })
         .catch((error: AxiosError) => {
-            output.innerHTML = error.message;
+            output.innerHTML = "Error " + error.code + " " + error.message
             console.log(error);
         });
+}
+
+function updateCar(): void {
+    let updateIdElmenent: HTMLInputElement = <HTMLInputElement>document.getElementById("updateId");
+    let updateModelElement: HTMLInputElement = <HTMLInputElement>document.getElementById("updateModel");
+    let updateVendorElement: HTMLInputElement = <HTMLInputElement>document.getElementById("updateVendor");
+    let updatePriceElement: HTMLInputElement = <HTMLInputElement>document.getElementById("updatePrice");
+    let id: string = updateIdElmenent.value;
+    let myModel: string = updateModelElement.value;
+    let myVendor: string = updateVendorElement.value;
+    let myPrice: number = Number(updatePriceElement.value);
+    let output: HTMLDivElement = <HTMLDivElement>document.getElementById("contentUpdate");
+    let uri: string = baseUri + "/" + id;
+    axios.put<ICar>(uri, { model: myModel, vendor: myVendor, price: myPrice })
+        .then((response: AxiosResponse) => {
+            let message: string = "response " + response.status + " " + response.statusText;
+            console.log(message);
+            if (response.status == 200)
+                output.innerHTML = carToString(response.data);
+            else
+                output.innerHTML = "No such car, id: " + id;
+        })
+        .catch((error: AxiosError) => {
+            output.innerHTML = "Error " + error.code + " " + error.message
+            console.log(error);
+        });
+
 }

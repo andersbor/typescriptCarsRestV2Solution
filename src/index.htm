@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en-US">
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Car Shop</title>
@@ -15,19 +16,46 @@
   <div id="content"></div>
 
   <h2>Get by id / Delete</h2>
-  <input id="deleteInput" placeholder="id" />
+  <input id="deleteInput" placeholder="id" type="number" />
   <button id="getByIdButton">Get by id</button>
   <button id="deleteButton">Delete</button>
 
   <div id="contentDeleteOrGetById"></div>
 
+  <h2>Get by ...</h2>
+  <p>
+    <input id="vendorInput" placeholder="Vendor" />
+    <button id="getByVendorButton">Get by vendor</button>
+  </p>
+  <p>
+    <input id="modelInput" placeholder="Model" />
+    <button id="getByModelButton">Get by model</button>
+  </p>
+  <p>
+    <input id="lowerPriceInput" placeholder="From price" type="number" />
+    <input id="higherPriceInput" placeholder="To price" type="number" />
+    <button id="getByPriceRangeButton">Get it!</button>
+  </p>
+  <div id="contentGetByFunctions"></div>
+
+
   <h2>Add</h2>
   <input id="addModel" placeholder="model" />
   <input id="addVendor" placeholder="vendor" />
-  <input id="addPrice" placeholder="price" type="number" />
+  <input id="addPrice" placeholder="price" type="number" type="number" />
   <button id="addButton">Add</button>
   <div id="contentAdd"></div>
- 
+
+  <h2>Update</h2>
+  <input id="updateId" placeholder="id" type="number" />
+  <input id="updateModel" placeholder="model" />
+  <input id="updateVendor" placeholder="vendor" />
+  <input id="updatePrice" placeholder="price" type="number" />
+  <button id="updateButton">Update</button>
+  <div id="contentUpdate"></div>
+
   <script src="bundle.js"></script>
+
 </body>
+
 </html>
