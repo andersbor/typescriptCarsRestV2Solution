@@ -10,7 +10,8 @@ interface ICar {
     price: number;
 }
 
-let baseUri: string = "http://anbo-carsrest.azurewebsites.net/api/cars";
+let baseUri: string = "https://anbo-carsrestv3.azurewebsites.net/api/cars"
+// "http://anbo-carsrest.azurewebsites.net/api/cars";
 
 let getAllButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("getAllButton");
 getAllButton.addEventListener("click", showAllCars);
@@ -44,11 +45,22 @@ function carArrayToList(cars: ICar[]): string {
     if (cars.length == 0) {
         return "empty";
     }
-    let result: string = "<ul>";
+    let result: string = "<ul class='list-group'>";
     cars.forEach((car: ICar) => {
-        result += "<li>" + carToString(car) + "</li>";
+        result += "<li class='list-group-item'>" + carToString(car) + "</li>";
     });
     result += "</ul>";
+    return result;
+}
+
+function carsArrayToTable(cars: ICar[]): string {
+    let result: string = "<table class='table table-striped'>" 
+    result += "<thead><th>id</th><th>vendor</th><th>model</th><th>price</th></thead>";
+    // https://www.w3schools.com/bootstrap/bootstrap_tables.asp
+    cars.forEach((car: ICar) => {
+        result += "<tr><td>" + car.id + "</td><td>" + car.vendor + "</td><td>" + car.model + "</td><td>" + car.price + "</tr></td>";
+    });
+    result += "</table>"
     return result;
 }
 
@@ -141,7 +153,8 @@ function getByPriceRange(): void {
     axios.get<ICar[]>(uri)
         .then((response: AxiosResponse) => {
             if (response.status == 200) {
-                outputElement.innerHTML = response.status + " " + carArrayToList(response.data);
+                outputElement.innerHTML = carsArrayToTable(response.data);
+                console.log(carsArrayToTable(response.data))
             } else {
                 outputElement.innerHTML = "No such car";
             }
@@ -156,21 +169,21 @@ function deleteCar(): void {
     let inputElement: HTMLInputElement = <HTMLInputElement>document.getElementById("deleteInput");
     let id: string = inputElement.value;
     let uri: string = baseUri + "/" + id;
-    axios.delete<ICar>(uri)
-        .then(function (response: AxiosResponse<ICar>): void {
+    axios.delete(uri)
+        .then(function (response: AxiosResponse): void {
             // element.innerHTML = generateSuccessHTMLOutput(response);
             // outputHtmlElement.innerHTML = generateHtmlTable(response.data);
             console.log(JSON.stringify(response));
             output.innerHTML = response.status + " " + response.statusText;
         })
         .catch(function (error: AxiosError): void { // error in GET or in generateSuccess?
-            if (error.response) {
+            if (error.response.status == 404) {
                 // the request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 // https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
-                output.innerHTML = "Error " + error.code + " " + error.message
+                output.innerHTML = "No such car, id: " + id
             } else { // something went wrong in the .then block?
-                output.innerHTML = "Error " + error.code + " " + error.message
+                output.innerHTML = "Error: " + error.code + " " + error.message
             }
         });
 }

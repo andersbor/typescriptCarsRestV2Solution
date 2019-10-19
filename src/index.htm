@@ -5,36 +5,40 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Car Shop</title>
   <link rel="stylesheet" type="text/css" href="bundle.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
   <h1>Car Shop</h1>
 
   <h2>Get All</h2>
-  <button id="getAllButton">Get all cars</button>
+  <button id="getAllButton" class="btn btn-primary">Get all cars</button>
 
   <div id="content"></div>
 
   <h2>Get by id / Delete</h2>
-  <input id="deleteInput" placeholder="id" type="number" />
-  <button id="getByIdButton">Get by id</button>
-  <button id="deleteButton">Delete</button>
+  <input id="deleteInput" placeholder="id" type="number" class="form-control" />
+  <button id="getByIdButton" class="btn btn-primary">Get by id</button>
+  <button id="deleteButton" class="btn btn-danger">Delete</button>
 
   <div id="contentDeleteOrGetById"></div>
 
   <h2>Get by ...</h2>
   <p>
     <input id="vendorInput" placeholder="Vendor" />
-    <button id="getByVendorButton">Get by vendor</button>
+    <button id="getByVendorButton" class="btn btn-primary">Get by vendor</button>
   </p>
   <p>
     <input id="modelInput" placeholder="Model" />
-    <button id="getByModelButton">Get by model</button>
+    <button id="getByModelButton" class="btn btn-primary">Get by model</button>
   </p>
   <p>
     <input id="lowerPriceInput" placeholder="From price" type="number" />
     <input id="higherPriceInput" placeholder="To price" type="number" />
-    <button id="getByPriceRangeButton">Get it!</button>
+    <button id="getByPriceRangeButton" class="btn btn-primary">Get it!</button>
   </p>
   <div id="contentGetByFunctions"></div>
 
@@ -43,7 +47,7 @@
   <input id="addModel" placeholder="model" />
   <input id="addVendor" placeholder="vendor" />
   <input id="addPrice" placeholder="price" type="number" type="number" />
-  <button id="addButton">Add</button>
+  <button id="addButton" class="btn btn-primary">Add</button>
   <div id="contentAdd"></div>
 
   <h2>Update</h2>
@@ -51,7 +55,7 @@
   <input id="updateModel" placeholder="model" />
   <input id="updateVendor" placeholder="vendor" />
   <input id="updatePrice" placeholder="price" type="number" />
-  <button id="updateButton">Update</button>
+  <button id="updateButton" class="btn btn-warning">Update</button>
   <div id="contentUpdate"></div>
 
   <script src="bundle.js"></script>
